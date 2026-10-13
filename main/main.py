@@ -12,13 +12,24 @@ clock = pygame.time.Clock()
 
 running = True
 delta = 0
+#-----
 
-while running:
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      running = False
-      
-  screen.fill("white")
-  #render
-  pygame.display.flip()
-  delta = clock.tick(60) / 1000
+def render():
+  pass
+
+
+
+def turn:
+  if running:
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        running = False
+        break
+    
+    screen.fill("white")
+    update_player_stats()
+    render()
+    
+
+
+pygame.quit()

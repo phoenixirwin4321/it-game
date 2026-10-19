@@ -1,0 +1,11 @@
+1. Player stat logic
+2. Action parsing and results
+2.5 Result description + text generation about location, inventory condition
+3. Player inventory and environment (trees, material, dirt, foraging, etc) interactions
+3.5 Crafting
+3.5.5 BUILDING
+4. Map + moving around, + buildings, locations/sites
+5. Loot generation and collecting loot
+6. Armour, weapons.
+7. COMBAT WITH BEARS, WOLVES, EAGLES, ZOMBIES, DIFFERENT ZOMBIE TYPES. DIFFERENT COMBAT EXPERIENES FOR EACH
+8. Ending the game by finding the bible and crucible and doing the blood ritual on a full moon.

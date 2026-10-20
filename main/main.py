@@ -28,7 +28,7 @@ class Player:
     self.dexterity_penalty = 0 #makes actions take longer, less effective during combat, etc
 
 def simulate(self, time_ticks):
-  pass #1 time tick is equal to 10 minutes  720 time ticks in a day
+  #1 time tick is equal to 10 minutes  720 time ticks in a day
 
   self.hunger -= 0.1
   self.thirst -= 0.1

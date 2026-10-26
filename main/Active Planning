@@ -10,3 +10,6 @@
 
 
 9. PYGAME AND GUI
+
+==================
+Hunger, thirst, simple grid map with buildings. Player has a location, and inventory. The environment has landmarks (like trees, buildings, campfires, animals/zombies. Each with their own info. For example a zombie might have a health, anger, and a value which says whether it has seen the player. After the player takes an action, there is a chance for the zombie to notice the player and attack, giving the player several options.

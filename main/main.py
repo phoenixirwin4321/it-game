@@ -1,9 +1,9 @@
 import random, time, pygame
 
 
-class player:
+class Player:
   def __init__(self):
-    self.location = "SW Grasslands"
+    self.location = "SW grasslands"     #Capitals for first word and lower case for everything else
     self.inventory = []
     self.clothing = [] #name, health, armour (reduces damage), insulation (temperature)
     #=======
@@ -25,14 +25,14 @@ class player:
     #then degrade all of the basic status effects
     #then update the wounds, which includes healing pain etc.
     
-class location(self, name):
+class Location(self, name):
   """this is the thing that will track each location's items, landmarks, name, animal and plant species, zombie population temperature, description, map position etc"""
   self.name = name
   self.items = []
   self.landmarks = []
   match self.name:
     case "Empty field":
-      self.fauna = []
+      self.fauna = [["rabbit", 3]]  #[name, population relative]
       self.flora = []
       self.zombie_population = 0
       self.weather = "temperate"
@@ -40,19 +40,22 @@ class location(self, name):
       self.distant_description = "A large empty field, with no trees, plants or landmarks visible"
       self.direction = {"north":"", "south":"", "east":"","west":"",}
 
-class beast:
+class Beast:
   """this will track the type of animal, and the health, blood, stamina, anger, etc.only tracks animals that are near the player"""
   def __init__(self, type):
     self.type = type
     match self.type:
       case "basic zombie":
-        self.health = 10
-        self.anger = 5
-        self.stamina = 10
-        self.blood = 10
-        self.status_effects = []
+       pass
 
-
+def game_setup():
+  os.system('cls')
+  global player = Player()
+  global L_SW_grasslands = Location("SW grasslands")
+  global L_SE_grasslands = Location("SE grasslands")
+  
+  
+  
 def turn():
   os.system('cls')
   #print player info and describe location and surroundings.

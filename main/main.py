@@ -24,6 +24,8 @@ class Player:
     #then check status effects and resolve each of their effects, like if fever[1] is in the status_effects list add 10 to temperature.
     #then degrade all of the basic status effects
     #then update the wounds, which includes healing pain etc.
+    for i in range(time):
+      break
     pass
     
 class Location:
@@ -59,28 +61,31 @@ class Beast:
     match self.type:
       case "basic zombie":
        pass
-
-def game_setup():
-  subprocess.call('cls')
-  global player 
-  player = Player()
-  global locations
-  locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
-    "Southern grasslands":Location("Southern grasslands"),
-    "S":Location(),
-    "":Location(),
-    "":Location(),
-    "":Location(),
-    "":Location(),
-  }
-  
-  
-  
+        
 def turn():
   subprocess.call('cls')
-  #print player info and describe location and surroundings.
+  #print player info and describe location and surroundings, landmarks and any animals.
   #prompt the player for their action
-  #parse the action. The effect on the player, inventory, structures and environment. And the amount of time it takes, and how noisy it is.
+  #parse the action. The effect on the player, inventory, structures and environment. And the amount of time it takes, and how noisy it is. Animals nearby can be startled and attack or run away.
   #resolve the action
   #Check to see if an animal encounter occurs, note that some actions like searching for animals explicitly cause this
-  
+
+continue_temporary = input("Welcome to Zompocalypse, the educational catholic zombie apocalypse survival game! Type \"y\" to play, anything else will quit")
+if not continue_temporary.lower() == "y":
+  quit()
+#===========otherwise start the game!!!!!!!!!!!!
+player = Player()
+locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
+  "Southern grasslands":Location("Southern grasslands"),
+  "Northern grasslands":Location("Northern grasslands"),
+  "Spooky woods":Location("Spooky woods"),
+  "Eastern forest":Location("Northern forest"),
+  "Western woods":Location("Southern woods"),
+  "Northern bushlands":Location("Western bushlands")
+  "Lake bank":Location("Lake bank"),
+  "Island":Location("Island"),
+  "Town":Location("Town"),
+  "Mountain edge":Location("Mountain edge"),
+  "Snowy peaks":Location("Snowy peaks"),
+  ""
+}

@@ -39,13 +39,16 @@ class Location(self, name):
       self.type = "outdoors" #affects animal encounters, and also actions. Like outdoors you would say "forage" but indoors you would say "search room" or something.
       self.description = "You are standing in a large empty field, there is nothing else in existance, only the empty field with a small house in the middle."
       self.distant_description = "A large empty field, with no trees, plants or landmarks visible, except a small house"
-      self.direction = {"north":"", "south":"", "east":"","west":""}
+      self.direction = {"north":"", "south":"", "east":"","west":"", "into house":"Small house 1"}
     case "Small house 1":
       self.fauna = []
       self.flora = []
       self.zombie_population = []
       self.weather = "temperate"
       self.type = "indoors"
+      self.description = "You are standing in a small empty house"
+      self.distant_description = "A small empty house standing in the field"
+      self.direction = {"out":"Empty field"}
 
 class Beast:
   """this will track the type of animal, and the health, blood, stamina, anger, etc.only tracks animals that are near the player"""

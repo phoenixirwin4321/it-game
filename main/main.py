@@ -3,20 +3,21 @@ import random, time, pygame, subprocess
 
 class Player:
   def __init__(self):
-    self.location = "Southern grasslands"     #Capitals for first word and lower case for everything else
+    self.location = "Southern grasslands" 
     self.inventory = []
-    self.clothing = [] #name, health, armour (reduces damage), insulation (temperature)
+    self.clothing = [("T-shirt", 10, 0, 1), ("shorts", 5, 0, 1), ("briefs", 4, 0, 0)] #name, health, armour (reduces damage), insulation (temperature). Clothing can be taken off and used for cloth, etc.
     #=======
     self.health = 100
     self.hunger = 100
+    self.wakefulness = 100 #starts to cause dexterity penalty when low.
     self.thirst = 100
     self.temperature = 50
 
     self.pain = 0
     self.dexterity_penalty = 0
     
-    self.status_effects = [] #various symptoms and illnesses and ailments
-    self.wounds = [] #details the wounding you have to different
+    self.status_effects = [] #various symptoms and illnesses and effects like wet, cold, shivering, zombie infection, food poisoning. As tuples with different meanings of the other sections of the tuple for each effect.
+    self.wounds = [] #details the wounds you have. Their pain, infection amount, dmg and type. Also location, receiving high damage wounds to a critical location can be dangerous.
   def update_stats(time):
     #1 time point = 10 minutes.
     #set pain and dexterity penalty and temperature to a fixed value and update accordingly.
@@ -32,27 +33,20 @@ class Location:
   """this is the thing that will track each location's items, landmarks, name, animal and plant species, zombie population temperature, description, map position etc"""
   def __init__(self, name):
     self.name = name
-    self.items = []
-    self.landmarks = []
+    self.items = [] #items dropped on the floor
+    self.landmarks = [] #things like campfires, tents, trees, etc
     match self.name:
-      case "Empty field":
-        self.fauna = [["rabbit", 3]]  #[name, population relative]
-        self.flora = []
-        self.zombie_population = 0
-        self.weather = "temperate"
-        self.type = "outdoors" #affects animal encounters, and also actions. Like outdoors you would say "forage" but indoors you would say "search room" or something.
-        self.description = "You are standing in a large empty field, there is nothing else in existance, only the empty field with a small house in the middle."
-        self.distant_description = "A large empty field, with no trees, plants or landmarks visible, except a small house"
-        self.direction = {"north":"", "south":"", "east":"","west":"", "into house":"Small house 1"}
-      case "Small house 1":
-        self.fauna = []
-        self.flora = []
-        self.zombie_population = []
-        self.weather = "temperate"
-        self.type = "indoors"
-        self.description = "You are standing in a small empty house"
-        self.distant_description = "A small empty house standing in the field"
-        self.direction = {"out":"Empty field"}
+      case "Southern grasslands":
+        self.flora = [("grass tuft", 3), ("shrub",2), ("sacred berry bush",1)]   #name and population. 1-3, 3 is common, 2 is kinda rare, 1 is very rare
+        self.fauna = [("rabbit", 3)]
+        self.landmarks = []
+        self.zombie_population = 1 #very tiny
+        self.weather = (5, "dry") #temperature addon, and how often it rains. either "dry" "average" or "wet"
+        self.type = "outdoors"
+        self.direction = dict(north="Northern grasslands")
+        self.description = "You are standing in an expansive sweeping grasslands, the tufts of dry grass blow in the wind."
+        self.distant_description = "a sweeping field of grass blowing in the wind"
+        
 
 class Beast:
   """this will track the type of animal, and the health, blood, stamina, anger, etc.only tracks animals that are near the player"""
@@ -67,13 +61,14 @@ def turn():
   #print player info and describe location and surroundings, landmarks and any animals.
   #prompt the player for their action
   #parse the action. The effect on the player, inventory, structures and environment. And the amount of time it takes, and how noisy it is. Animals nearby can be startled and attack or run away.
-  #resolve the action
-  #Check to see if an animal encounter occurs, note that some actions like searching for animals explicitly cause this
+  #resolve the action and print the result of the action like "you eat the cheese and suddenly keel over, clutching your stomach, you don't feel very well... (+5 food poisoning)"
+  #Check to see if an animal encounter occurs, note that some actions like searching for animals explicitly cause this.
 
 continue_temporary = input("Welcome to Zompocalypse, the educational catholic zombie apocalypse survival game! Type \"y\" to play, anything else will quit")
 if not continue_temporary.lower() == "y":
   quit()
 #===========otherwise start the game!!!!!!!!!!!!
+subprocess.call('cls')
 player = Player()
 locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
   "Southern grasslands":Location("Southern grasslands"),
@@ -87,5 +82,14 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Town":Location("Town"),
   "Mountain edge":Location("Mountain edge"),
   "Snowy peaks":Location("Snowy peaks"),
-  ""
+  "Abandoned hut":Location("Abandoned hut"),
+  "Witch's hut":Location("Witch's hut"),
+  "Townhouse 1":Location("Townhouse 1"),
+  "Townhouse 2":Location("Townhouse 2"),
+  "Clinic":Location("Clinic"),
+  "Supermarket":Location("Supermarket"),
+  "Church":Location("Church"),
+  "Cheese shop":Location("Cheese shop"),
+  "Mountain cave":Location("Mountain cave"),
+  "Underground bunker":Location("Underground bunker") #mechanic where looking around can reveal entrances possibly?
 }

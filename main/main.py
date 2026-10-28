@@ -57,7 +57,7 @@ class Beast:
        pass
         
 def turn():
-  subprocess.call('cls')
+  subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
   #print player info and describe location and surroundings, landmarks and any animals.
   #prompt the player for their action
   #parse the action. The effect on the player, inventory, structures and environment. And the amount of time it takes, and how noisy it is. Animals nearby can be startled and attack or run away.
@@ -68,7 +68,7 @@ continue_temporary = input("Welcome to Zompocalypse, the educational catholic zo
 if not continue_temporary.lower() == "y":
   quit()
 #===========otherwise start the game!!!!!!!!!!!!
-subprocess.call('cls')
+subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
 player = Player()
 locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
   "Southern grasslands":Location("Southern grasslands"),

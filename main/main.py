@@ -1,4 +1,4 @@
-import random, time, pygame
+import random, time, pygame, subprocess
 
 
 class Player:
@@ -24,31 +24,33 @@ class Player:
     #then check status effects and resolve each of their effects, like if fever[1] is in the status_effects list add 10 to temperature.
     #then degrade all of the basic status effects
     #then update the wounds, which includes healing pain etc.
+    pass
     
-class Location(self, name):
+class Location:
   """this is the thing that will track each location's items, landmarks, name, animal and plant species, zombie population temperature, description, map position etc"""
-  self.name = name
-  self.items = []
-  self.landmarks = []
-  match self.name:
-    case "Empty field":
-      self.fauna = [["rabbit", 3]]  #[name, population relative]
-      self.flora = []
-      self.zombie_population = 0
-      self.weather = "temperate"
-      self.type = "outdoors" #affects animal encounters, and also actions. Like outdoors you would say "forage" but indoors you would say "search room" or something.
-      self.description = "You are standing in a large empty field, there is nothing else in existance, only the empty field with a small house in the middle."
-      self.distant_description = "A large empty field, with no trees, plants or landmarks visible, except a small house"
-      self.direction = {"north":"", "south":"", "east":"","west":"", "into house":"Small house 1"}
-    case "Small house 1":
-      self.fauna = []
-      self.flora = []
-      self.zombie_population = []
-      self.weather = "temperate"
-      self.type = "indoors"
-      self.description = "You are standing in a small empty house"
-      self.distant_description = "A small empty house standing in the field"
-      self.direction = {"out":"Empty field"}
+  def __init__(self, name):
+    self.name = name
+    self.items = []
+    self.landmarks = []
+    match self.name:
+      case "Empty field":
+        self.fauna = [["rabbit", 3]]  #[name, population relative]
+        self.flora = []
+        self.zombie_population = 0
+        self.weather = "temperate"
+        self.type = "outdoors" #affects animal encounters, and also actions. Like outdoors you would say "forage" but indoors you would say "search room" or something.
+        self.description = "You are standing in a large empty field, there is nothing else in existance, only the empty field with a small house in the middle."
+        self.distant_description = "A large empty field, with no trees, plants or landmarks visible, except a small house"
+        self.direction = {"north":"", "south":"", "east":"","west":"", "into house":"Small house 1"}
+      case "Small house 1":
+        self.fauna = []
+        self.flora = []
+        self.zombie_population = []
+        self.weather = "temperate"
+        self.type = "indoors"
+        self.description = "You are standing in a small empty house"
+        self.distant_description = "A small empty house standing in the field"
+        self.direction = {"out":"Empty field"}
 
 class Beast:
   """this will track the type of animal, and the health, blood, stamina, anger, etc.only tracks animals that are near the player"""
@@ -59,9 +61,11 @@ class Beast:
        pass
 
 def game_setup():
-  os.system('cls')
-  global player = Player()
-  global locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
+  subprocess.call('cls')
+  global player 
+  player = Player()
+  global locations
+  locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
     "Southern grasslands":Location("Southern grasslands"),
     "S":Location(),
     "":Location(),
@@ -73,7 +77,7 @@ def game_setup():
   
   
 def turn():
-  os.system('cls')
+  subprocess.call('cls')
   #print player info and describe location and surroundings.
   #prompt the player for their action
   #parse the action. The effect on the player, inventory, structures and environment. And the amount of time it takes, and how noisy it is.

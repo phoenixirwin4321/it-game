@@ -1,4 +1,4 @@
-import random, time, pygame, subprocess
+import random, time, pygame, subprocess, os
 
 
 class Player:
@@ -76,7 +76,7 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Spooky woods":Location("Spooky woods"),
   "Eastern forest":Location("Northern forest"),
   "Western woods":Location("Southern woods"),
-  "Northern bushlands":Location("Western bushlands")
+  "Northern bushlands":Location("Western bushlands"),
   "Lake bank":Location("Lake bank"),
   "Island":Location("Island"),
   "Town":Location("Town"),

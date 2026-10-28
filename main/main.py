@@ -3,7 +3,7 @@ import random, time, pygame
 
 class Player:
   def __init__(self):
-    self.location = "SW grasslands"     #Capitals for first word and lower case for everything else
+    self.location = "Southern grasslands"     #Capitals for first word and lower case for everything else
     self.inventory = []
     self.clothing = [] #name, health, armour (reduces damage), insulation (temperature)
     #=======
@@ -36,9 +36,16 @@ class Location(self, name):
       self.flora = []
       self.zombie_population = 0
       self.weather = "temperate"
-      self.description = "You are standing in a large empty field, there is nothing else in existance, only the empty field."
-      self.distant_description = "A large empty field, with no trees, plants or landmarks visible"
-      self.direction = {"north":"", "south":"", "east":"","west":"",}
+      self.type = "outdoors" #affects animal encounters, and also actions. Like outdoors you would say "forage" but indoors you would say "search room" or something.
+      self.description = "You are standing in a large empty field, there is nothing else in existance, only the empty field with a small house in the middle."
+      self.distant_description = "A large empty field, with no trees, plants or landmarks visible, except a small house"
+      self.direction = {"north":"", "south":"", "east":"","west":""}
+    case "Small house 1":
+      self.fauna = []
+      self.flora = []
+      self.zombie_population = []
+      self.weather = "temperate"
+      self.type = "indoors"
 
 class Beast:
   """this will track the type of animal, and the health, blood, stamina, anger, etc.only tracks animals that are near the player"""
@@ -51,8 +58,14 @@ class Beast:
 def game_setup():
   os.system('cls')
   global player = Player()
-  global L_SW_grasslands = Location("SW grasslands")
-  global L_SE_grasslands = Location("SE grasslands")
+  global locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
+    "Southern grasslands":Location("Southern grasslands"),
+    "S":Location(),
+    "":Location(),
+    "":Location(),
+    "":Location(),
+    "":Location(),
+  }
   
   
   

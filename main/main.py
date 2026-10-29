@@ -1,5 +1,32 @@
 import random, time, pygame, subprocess, os
 
+class Weather:
+  def __init__(self):
+    self.current = "clear"
+    self.raining = False
+    self.time = 36 #144 10 minute runs turns in a day. so 0 = 0:00   12:00 midday would be 72. 8:00am = 48. game starts at 6:00am so 36.
+    self.temperature_modifiers = {
+      "clear":0, #never raining || basically different weathers will have different rain chances
+      "cloudy":-4,
+      "cold":-10,
+      "hot":10,
+      "storm":6 #always raining with storm, just means like tropical weather
+    }
+    self.time_rounded_temporary = round(self.time/14.4)
+    self.time_temperature_modifiers = {
+      1:-5,
+      2:-2,
+      3:1,
+      4:3,
+      5:5,
+      6:4,
+      7:2,
+      8:0,
+      9:-2,
+      10:-3,
+    }
+  def write_description():
+    pass
 
 class Player:
   def __init__(self):
@@ -8,6 +35,7 @@ class Player:
     self.clothing = [("T-shirt", 10, 0, 1), ("shorts", 5, 0, 1), ("briefs", 4, 0, 0)] #name, health, armour (reduces damage), insulation (temperature). Clothing can be taken off and used for cloth, etc.
     #=======
     self.health = 100
+    self.stamina = 100
     self.hunger = 100
     self.wakefulness = 100 #starts to cause dexterity penalty when low.
     self.thirst = 100
@@ -18,7 +46,8 @@ class Player:
     
     self.status_effects = [] #various symptoms and illnesses and effects like wet, cold, shivering, zombie infection, food poisoning. As tuples with different meanings of the other sections of the tuple for each effect.
     self.wounds = [] #details the wounds you have. Their pain, infection amount, dmg and type. Also location, receiving high damage wounds to a critical location can be dangerous.
-  def update_stats(time):
+    
+  def update_stats(self, time):
     #1 time point = 10 minutes.
     #set pain and dexterity penalty and temperature to a fixed value and update accordingly.
     #the first step is to check the weather and set the temperature accordingly
@@ -26,7 +55,14 @@ class Player:
     #then degrade all of the basic status effects
     #then update the wounds, which includes healing pain etc.
     for i in range(time):
-      break
+      self.temperature = 50
+      self.temperature += weather.temperature_modifiers[weather.current]
+      self.temperature += weather.time_temperature_modifiers[round(weather.time/14.4)]
+      print(self.temperature) #debug shit
+    
+  def write_conditions(self):
+    pass
+  def write_info(self):
     pass
     
 class Location:
@@ -47,6 +83,9 @@ class Location:
         self.description = "You are standing in an expansive sweeping grasslands, the tufts of dry grass blow in the wind."
         self.distant_description = "a sweeping field of grass blowing in the wind"
         
+  def write_description(self):
+    pass
+        
 
 class Beast:
   """this will track the type of animal, and the health, blood, stamina, anger, etc.only tracks animals that are near the player"""
@@ -55,6 +94,7 @@ class Beast:
     match self.type:
       case "basic zombie":
        pass
+
         
 def turn():
   subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
@@ -70,6 +110,7 @@ if not continue_temporary.lower() == "y":
 #===========otherwise start the game!!!!!!!!!!!!
 subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
 player = Player()
+weather = Weather()
 locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.
   "Southern grasslands":Location("Southern grasslands"),
   "Northern grasslands":Location("Northern grasslands"),
@@ -93,3 +134,5 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Mountain cave":Location("Mountain cave"),
   "Underground bunker":Location("Underground bunker") #mechanic where looking around can reveal entrances possibly?
 }
+
+player.update_stats(1)

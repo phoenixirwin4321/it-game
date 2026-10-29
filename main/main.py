@@ -63,8 +63,9 @@ class Location:
   """this is the thing that will track each location's items, landmarks, name, animal and plant species, zombie population temperature, description, map position etc"""
   def __init__(self, name):
     self.name = name
-    self.items = [] #items dropped on the floor
-    self.landmarks = [] #things like campfires, tents, trees, etc
+    self.items = [] #items dropped on the floor ; like sticks, rocks, tools
+    self.landmarks = [] #things like campfires, tents, trees, bushes, bouldes, furniture etc
+    self.beasts = [] #these are all of the animals and beasts. List of objects
     match self.name:
       case "Southern grasslands":
         self.flora = [("grass tuft", 3), ("shrub",2), ("sacred berry bush",1)]   #name and population. 1-3, 3 is common, 2 is kinda rare, 1 is very rare

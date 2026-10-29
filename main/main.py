@@ -58,6 +58,7 @@ class Player:
       self.temperature = 50
       self.temperature += weather.temperature_modifiers[weather.current]
       self.temperature += weather.time_temperature_modifiers[round(weather.time/14.4)]
+      self.temperature += locations[self.location].weather[0]
       print(self.temperature) #debug shit
     
   def write_conditions(self):

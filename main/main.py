@@ -13,18 +13,7 @@ class Weather:
       "storm":6 #always raining with storm, just means like tropical weather
     }
     self.time_rounded_temporary = round(self.time/14.4)
-    self.time_temperature_modifiers = {
-      1:-5,
-      2:-2,
-      3:1,
-      4:3,
-      5:5,
-      6:4,
-      7:2,
-      8:0,
-      9:-2,
-      10:-3,
-    }
+    self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}
   def write_description():
     pass
 
@@ -55,11 +44,15 @@ class Player:
     #then degrade all of the basic status effects
     #then update the wounds, which includes healing pain etc.
     for i in range(time):
+      #work out temperature first
       self.temperature = 50
+      self.insulation = 0
+      for item in self.clothing:
+        self.insulation+=item[3]
       self.temperature += weather.temperature_modifiers[weather.current]
       self.temperature += weather.time_temperature_modifiers[round(weather.time/14.4)]
       self.temperature += locations[self.location].weather[0]
-      print(self.temperature) #debug shit
+      self.temperature += self.insulation
     
   def write_conditions(self):
     pass

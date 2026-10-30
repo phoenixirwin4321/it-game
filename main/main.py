@@ -132,5 +132,4 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Underground bunker":Location("Underground bunker") #mechanic where looking around can reveal entrances possibly?
 }
 
-player.update_stats(1)
 # TEST TO SEE IF THE CLONING WORKS

@@ -70,6 +70,8 @@ class Location:
       case "Southern grasslands":
         self.flora = [("grass tuft", 3), ("shrub",2), ("sacred berry bush",1)]   #name and population. 1-3, 3 is common, 2 is kinda rare, 1 is very rare
         self.fauna = [("rabbit", 3)]
+        self.items_to_forage = [] #this is things that can be found like rocks, sticks, etc.
+        self.ground = ["leaf litter", "dirt", "dry grass"]
         self.landmarks = []
         self.zombie_population = 1 #very tiny
         self.weather = (5, "dry") #temperature addon, and how often it rains. either "dry" "average" or "wet"

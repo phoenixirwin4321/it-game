@@ -71,7 +71,7 @@ class Player:
       if self.pain < minimum_pain_temporary:
         self.pain = minimum_pain_temporary
 
-      self.dexterity_penalty = self.pain
+      self.dexterity_penalty = self.pain #...
 
       for effect in self.status_effects:
         pass
@@ -95,7 +95,7 @@ class Player:
           self.damage_all_limbs(1)
       if self.temperature > 75:
         self.damage_all_limbs(2)
-      if self.temperature < 25:  #...
+      if self.temperature < 25:  #... add more effects for everything. This WHOLE BLOCK is just temporary. I will have a proper function to put them into sections.
         self.damage_all_limbs(2)
 
       self.deal_bleeding_damage()
@@ -117,8 +117,8 @@ class Player:
 
       germ_temp = self.limbs[limb]["germs"]
 
-      if germ_temp in range(10, 20):
-        self.limbs[limb]["health"] -= random.randint(1,3)
+      if germ_temp > 10:
+        self.limbs[limb]["health"] -= random.randint(min(germ_temp//10, 5))
       if germ_temp in range(20, 40):
         self.damage_all_limbs(2) #...
 
@@ -166,6 +166,21 @@ class Beast:
     match self.type:
       case "basic zombie":
        pass
+
+class item:
+  def __init__(self, type):
+    self.type = type
+    match self.type:
+      case "apple":
+        self.freshness = 5 #5 days
+        self.satiation = 4
+        self.perished = "rotten apple" #turns into this when the freshness timer reaches 0
+        self.interactions_descriptions = {}#...
+
+
+class landmark:
+  def __init__(self, type):
+    self.type = type
 
         
 def turn():

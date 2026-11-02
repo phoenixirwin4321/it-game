@@ -34,9 +34,9 @@ class Weather:
     }
     self.time_rounded_temporary = round(self.time/14.4)
     self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}
-  def update():
+  def update(self):
     #change all of the data, based on the location, time of day and random chance.
-    self.current_cloudiness = random.choice(self.cloudiness_modifiers.keys())
+    self.current_cloudiness = random.choice(list(self.cloudiness_modifiers.keys()))
     self.air_temperature = dice(20)-10 +locations[player.location].weather[0]
     self.wind = dice(10) *locations[player.location].weather[0]
     self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
@@ -316,3 +316,5 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Underground bunker":Location("Underground bunker"), #mechanic where looking around can reveal entrances possibly?
   "Ocean":Location("Ocean")
 }
+
+weather.update()

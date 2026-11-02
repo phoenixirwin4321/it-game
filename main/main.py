@@ -3,10 +3,12 @@ import random, time, subprocess, os
 class Weather:
   def __init__(self):
     self.current_cloudiness = "clear"
+    self.air_temperature = 0    #20 lower than normal
+    self.windiness = 0 #lowers temperature, and also can make the player get windbite or shit.
     self.precipitation = 0
     self.time = 36 #144 10 minute runs turns in a day. so 0 = 0:00   12:00 midday would be 72. 8:00am = 48. game starts at 6:00am so 36.
     self.cloudiness_modifiers = {
-      "clear":0, #never raining || basically different weathers will have different rain chances
+      "clear":0, #different cloudiness have different rain chance
       "cloudy":-3,
       "extremely cloudy":-10,
       "slightly cloudy":10,

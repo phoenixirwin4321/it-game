@@ -1,16 +1,15 @@
-import random, time, pygame, subprocess, os
+import random, time, subprocess, os
 
 class Weather:
   def __init__(self):
-    self.current = "clear"
-    self.raining = False
+    self.current_cloudiness = "clear"
+    self.precipitation = 0
     self.time = 36 #144 10 minute runs turns in a day. so 0 = 0:00   12:00 midday would be 72. 8:00am = 48. game starts at 6:00am so 36.
-    self.temperature_modifiers = {
+    self.cloudiness_modifiers = {
       "clear":0, #never raining || basically different weathers will have different rain chances
-      "cloudy":-4,
-      "cold":-10,
-      "hot":10,
-      "storm":6 #always raining with storm, just means like tropical weather
+      "cloudy":-3,
+      "extremely cloudy":-10,
+      "slightly cloudy":10,
     }
     self.time_rounded_temporary = round(self.time/14.4)
     self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}
@@ -47,87 +46,8 @@ class Player:
                       
     
   def update_stats(self, time):
-    #1 time point = 10 minutes.
-    #set pain and dexterity penalty and temperature to a fixed value and update accordingly.
-    #the first step is to check the weather and set the temperature accordingly
-    #then check status effects and resolve each of their effects, like if fever[1] is in the status_effects list add 10 to temperature.
-    #then degrade all of the basic status effects
-    #then update the wounds, which includes healing pain etc.
     for i in range(time):
-
-      self.temperature = 50
-      self.insulation = 0
-      for item in self.clothing:
-        self.insulation+=item[3]
-      self.temperature += weather.temperature_modifiers[weather.current]
-      self.temperature += weather.time_temperature_modifiers[round(weather.time/14.4)]
-      self.temperature += locations[self.location].weather[0]
-      self.temperature += self.insulation
-
-      minimum_pain_temporary = 0
-      for each in self.limbs.keys():
-        minimum_pain_temporary += self.limbs[each]["pain"]
-      self.pain -= 1
-      if self.pain < minimum_pain_temporary:
-        self.pain = minimum_pain_temporary
-
-      self.dexterity_penalty = self.pain #...
-
-      for effect in self.status_effects:
-        pass
-
-      self.stamina += 10
-      if self.stamina > 100:
-        self.stamina = 100
-
-      self.immunity = 100 #...
-      
-      self.hunger -= 1
-      self.thirst -= 1
-      self.wakefulness -= 0.5
-
-      if self.hunger < 1:
-        self.damage_all_limbs(1)
-      if self.thirst < 1:
-        self.damage_all_limbs(2)
-      if self.wakefulness < 1:
-        if random.choice[True, False, False]:
-          self.damage_all_limbs(1)
-      if self.temperature > 75:
-        self.damage_all_limbs(2)
-      if self.temperature < 25:  #... add more effects for everything. This WHOLE BLOCK is just temporary. I will have a proper function to put them into sections.
-        self.damage_all_limbs(2)
-
-      self.deal_bleeding_damage()
-      self.resolve_wound_infections()
-
-
-  def deal_bleeding_damage(self):
-    for limb in self.limbs.keys():
-      self.damage_all_limbs(self.limbs[limb]["bleeding"])
-      if self.limbs[limb]["bleeding"] > 0:
-        self.limbs[limb]["bleeding"]-= 1
-
-  def resolve_wound_infections(self):
-    for limb in self.limbs.keys():
-      if random.random()*100 > self.limbs[limb]["skin"]:
-        self.limbs[limb]["germs"] += 1
-      if random.random()*100*1.1 > self.immunity:
-        self.limbs[limb]["germs"] += 1
-
-      germ_temp = self.limbs[limb]["germs"]
-
-      if germ_temp > 10:
-        self.limbs[limb]["health"] -= random.randint(min(germ_temp//10, 5))
-      if germ_temp in range(20, 40):
-        self.damage_all_limbs(2) #...
-
-      
-      
-
-  def damage_all_limbs(self, amount):
-    for limb in self.limbs.keys():
-      self.limbs[limb]["health"] -= amount
+      pass
 
   def write_conditions(self):
     pass
@@ -170,32 +90,32 @@ class Beast:
 class item:
   def __init__(self, type):
     self.type = type
-    match self.type:
-      case "apple":
-        self.freshness = 5 #5 days
-        self.satiation = 4
-        self.perished = "rotten apple" #turns into this when the freshness timer reaches 0
-        self.interactions_descriptions = {}#...
-
-
+    
 class landmark:
   def __init__(self, type):
     self.type = type
 
-        
-def turn():
+
+def items_in(location):
+  return list(locations[player.location].items)
+def cls():
   subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
-  #print player info and describe location and surroundings, landmarks and any animals.
+def chance(percent):
+  return (random.random *100 <= percent)
+
+def turn():
+  cls()
+  #print player info and describe location and surroundings, landmarks and any animals, weather, environment, time of day, etc.
   #prompt the player for their action
   #parse the action. The effect on the player, inventory, structures and environment. And the amount of time it takes, and how noisy it is. Animals nearby can be startled and attack or run away.
   #resolve the action and print the result of the action like "you eat the cheese and suddenly keel over, clutching your stomach, you don't feel very well (+5 food poisoning)"
   #Check to see if an animal encounter occurs, note that some actions like searching for animals explicitly cause this.
 
 continue_temporary = input("Welcome to Zompocalypse, the educational catholic zombie apocalypse survival game! Type \"y\" to play, anything else will quit")
-if not continue_temporary.lower() == "y":
+if (not continue_temporary.lower() == "y") or (__name__ != "__main__"):
   quit()
 #===========otherwise start the game!!!!!!!!!!!!
-subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
+cls()
 player = Player()
 weather = Weather()
 locations = {  #directions from locations can be North/West/South/East OR In/Out for different buildings.

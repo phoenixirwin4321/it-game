@@ -36,7 +36,7 @@ class Weather:
     self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}
   def update():
     #change all of the data, based on the location, time of day and random chance.
-    self.current_cloudiness = random,.choice(self.cloudiness_modifiers.keys())
+    self.current_cloudiness = random.choice(self.cloudiness_modifiers.keys())
     self.air_temperature = dice(20)-10 +locations[player.location].weather[0]
     self.wind = dice(10) *locations[player.location].weather[0]
     self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
@@ -46,7 +46,7 @@ class Weather:
   def is_day(self):
     return 36 <= self.time <= 120
     
-  def write_description():
+  def write_description(self):
     description = []
     if self.time_rounded_temporary == 1:
       description.append("It is early dawn, and the sun has not yet risen")
@@ -65,7 +65,7 @@ class Weather:
       description.append("A light rain is falling over the island")
     elif 66<=self.precipitation<=80:
       description.append("A moderate downfall is pouring over the island")
-    elif 81 <= self.precipitation < = 90:
+    elif 81 <= self.precipitation <= 90:
       description.append("It is pouring down all around")
     elif self.precipitation > 90:
       description.append("It is pouring down a torrent like nothing ever before seen!")

@@ -1,5 +1,23 @@
 import random, time, subprocess, os
 #remember 1440 minutes per day so 144 turns per day. Also here is the Unicode dot point symbol: •
+
+#------------------------------------------------
+def cls():
+  subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
+  
+def chance(percent):
+  return (random.random *100 <= percent)
+
+def dice(x):
+  return random.randint(1, x+1)
+
+def between(x, minimum, maximum):
+  return minimum <= x <= maximum
+  
+def cap(x, minimum, maximum):
+  return min(max(x, minimum), maximum)
+#------------------------------------------------
+
 class Weather:
   def __init__(self):
     self.current_cloudiness = "clear"
@@ -10,7 +28,7 @@ class Weather:
     self.cloudiness_modifiers = {
       "clear":5, #different cloudiness have different rain chance
       "cloudy":-5,
-      "extremely cloudy":-9,
+      "very cloudy":-9,
       "slightly cloudy":-2,
       "very sunny":9
     }
@@ -18,11 +36,77 @@ class Weather:
     self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}
   def update():
     #change all of the data, based on the location, time of day and random chance.
-    pass
+    self.current_cloudiness = random,.choice(self.cloudiness_modifiers.keys())
+    self.air_temperature = dice(20)-10 +locations[player.location].weather[0]
+    self.wind = dice(10) *locations[player.location].weather[0]
+    self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
+    
   def calculate_air_temp(self):
-    return self.air_temperature + self.cloudiness_modifiers[self.current_cloudiness] + self.time_temperature_modifiers[self.time_rounded_temporary] - (self.wind/2) 
+    return self.air_temperature + locations[self.location].weather[0] + self.cloudiness_modifiers[self.current_cloudiness] + self.time_temperature_modifiers[self.time_rounded_temporary] - (self.wind/2) 
+  def is_day(self):
+    return 36 <= self.time <= 120
+    
   def write_description():
-    pass
+    description = []
+    if self.time_rounded_temporary == 1:
+      description.append("It is early dawn, and the sun has not yet risen")
+    elif self.time_rounded_temporary == 2:
+      description.append("It is early dawn, the sun has risen over the island")
+    elif 2 < self.time_rounded_temporary <= 5:
+      description.append("It is morning, and the sun is high in the sky")
+    elif 5 < self.time_rounded_temporary <= 7:
+      description.append("It is noon, the sun is high in the sky")
+    elif self.time_rounded_temporary == 8:
+      description.append("It is the evening, the sun is beginning to set and the moon is slowly rising")
+    else:
+      description.append("It is night, the sun has set and the moon is high in the sky. Crickets and other bugs can be heard croaking rhythmically")
+
+    if 50 <= self.precipitation <= 65:
+      description.append("A light rain is falling over the island")
+    elif 66<=self.precipitation<=80:
+      description.append("A moderate downfall is pouring over the island")
+    elif 81 <= self.precipitation < = 90:
+      description.append("It is pouring down all around")
+    elif self.precipitation > 90:
+      description.append("It is pouring down a torrent like nothing ever before seen!")
+      
+    match self.current_cloudiness:
+      case "clear":
+        if self.is_day():
+          description.append("The weather is clear, with a few clouds present")
+        else:
+          description.append("The night sky is clear, a few clouds slowly drift across")
+      case "cloudy":
+        if self.is_day():
+          description.append("The sky is moderately cloudy, casting grey shadows on the ground")
+        else:
+          description.append("The night sky is cloudy and dark")
+      case "very cloudy":
+        if self.is_day():
+          description.append("Thick grey clouds cover the entire sky, casting a dark shadow over the whole surface of the island")
+        else:
+          description.append("Thick grey clouds cover the entire sky, blocking out the stars")
+      case "slightly cloudy":
+        if self.is_day():
+          description.append("The sky is mostly clear, with some light cloud cover")
+        else:
+          description.append("The sky is mostly clear, moonlight illuminates the landscape")
+      case "very sunny":
+        if self.is_day():
+          description.append("The sun blares down and there is not a cloud in sight")
+        else:
+          description.append("The sky is devoid of clouds, and the moon shines down, providing a surprising amount of light to see with")
+
+  if 0 <= self.wind <= 2:
+    description.append("The air is still; no wind")
+  elif 3 <= self.wind <= 5:
+    description.append("A light breeze is flowing across the island")
+  elif 6 <= self.wind <= 8:
+    description.append("A moderate gale is whooshing overr the island")
+  elif 9 <= self.wind <= 10:
+    description.append("A strong marine wind is blowing over the island, and leaves and other small things are swirling around in the tempest.")
+  
+  description.append(f"The air temperature is {self.calculate_air_temperature() +20}")
 
 class Player:
   def __init__(self):
@@ -38,6 +122,8 @@ class Player:
     self.wakefulness = 100
     self.thirst = 100
     self.temperature = 50
+    self.target_temperature = 50
+    
     self.mood = 50 #affects general penalty and also immunity. Can cause status effects like ecstatic, depressed, etc. Also is dynamic but normaliser scales.
 
     self.dirt = 0 #some actions increase, washing decreases
@@ -67,17 +153,30 @@ class Player:
       self.resolve_wound_effects() #like germs, bleeding, damage to limbs
       self.change_dynamic_stats()
       self.cap_values()
+      self.remove_destroyed_clothing()
 
   def set_static_stats(self):
     #temperature
     self.insulation = self.calculate_insulation()
-    self.temperature = 50 + (self.insulation + weather.calculate_air_temp() + locations[self.location].weather[0])
+    self.target_temperature = 50 + (self.insulation + weather.calculate_air_temp())
+    #----------------------
+    #then we have pain
+    self.pain -= 1
+    t_x = self.calculate_minimum_pain()
+    if self.pain < t_x:
+      self.pain = t_x
+    #-----------------------
 
   def calculate_insulation(self):
     temporary = 0
     for item in self.clothing:
       temporary += item[3]
     return temporary
+  def calculate_minimum_pain(self):
+    x = 0
+    for limb in self.limbs.keys():
+      x += self.limbs[limb]["pain"]
+    return x
 
   def determine_active_status_effects(self):
     pass
@@ -88,6 +187,8 @@ class Player:
   def change_dynamic_stats(self):
     pass
   def resolve_wound_effects(self):
+    pass
+  def remove_destroyed_clothing(self):
     pass
   
   def write_conditions(self):
@@ -102,31 +203,59 @@ class Location:
     self.beasts = [] #these are all of the animals and beasts. List of objects
     match self.name:
       case "Southern grasslands":
-        self.flora = {3:("grass tuft"), 2:("shrub"), 1:("kaju root")}   #name and population. 1-3, 3 is common, 2 is kinda rare, 1 is very rare and 0 might be horrifically rare
-        self.fauna = {3:("rabbit"), 2:("seagull"), 1:("grass snake")}
-        self.items_to_forage = {3:("twig", "stone"), 2:("stick", "dry leaves"), 1:("leaves")} #this is things that can be found like rocks, sticks, etc.
+        self.flora = {3:("grass tuft"), 2:("shrub"), 1:("kaju root"), 0:()}   #name and population. 1-3, 3 is common, 2 is kinda rare, 1 is very rare and 0 might be 1 in 4000 games you might see it you know
+        self.fauna = {3:("rabbit"), 2:("seagull"), 1:("grass snake"), 0:()}
+        self.items_to_forage = {3:("twig", "stone"), 2:("stick", "dry leaves"), 1:("leaves"), 0:()} #this is things that can be found like rocks, sticks, etc.
         self.ground = ("dirt", "dry grass")
         self.zombie_population = 1 #!!!!!MEANS THAT THERE IS A 1% OF ENCOUNTERING A ZOMBIE EVERY 144 TURNS SO IN OTHER WORDS 0.01/144 CHANCE PER TURN!!!!!
         self.weather = (5, 1.5, 0.8)    #temperature add / wind multiplier / precipitation multiplier
         self.type = "outdoors"
         self.direction = dict(north=("Northern grasslands", 2), surrounds=("Ocean", 0))  #The second element is the amount of turns it takes to travel in that direction
         self.description = "You are standing in a sweeping grassy plain which extends all around you."
-        self.distant_description = "a sweeping field of dry grass"
+        self.distant_description = "a sweeping field"
 
       case "Northern grasslands":
-        self.flora = {3:("grass tuft", "shrub"), 2:(), 1:("small tree", "berry bush")}
-        self.fauna = {3:("rabbit"),2:("grass snake"),1:()}
-        self.items_to_forage = {3:("twig", "stone"),2:("stick", "dry leaves"),1:("leaves")}
+        self.flora = {3:("grass tuft", "shrub"), 2:(), 1:("small tree", "berry bush"), 0:()}
+        self.fauna = {3:("rabbit"),2:("grass snake"),1:(), 0:()}
+        self.items_to_forage = {3:("twig", "stone"),2:("stick", "dry leaves"),1:("leaves", "wood", "large rock"), 0:()}
         self.ground = ("dirt", "dry grass")
         self.zombie_population = 3
         self.weather = (3, 1.2, 0.9)
         self.type = "outdoors"
-        self.direction = dict(north=("Town", 3), west=("Western woods", 2), east=("Eastern forest", 2),south=("Southern grasslands", 2))
+        self.direction = dict(north=("Town", 3), northwest=("Western woods", 2), northeast=("Eastern forest", 2),south=("Southern grasslands", 2))
         self.description = "You are standing in a grassy meadow area"
         self.distant_description = "a grassy meadow"
 
       case "Western woods":
-        self.flora = {3:("small tree", "small tree", "bush", "tree", "shrub"), 2:("grass tuft", "berry bush", "mushroom patch", "snakegrass"), 1:("apple tree")}
+        self.flora = {3:("small tree", "small tree", "bush", "tree", "shrub"), 2:("grass tuft", "berry bush", "mushroom patch", "snakegrass"), 1:("apple tree"), 0:()}
+        self.fauna = {
+          3:("rabbit", "bird"),
+          2:("deer", "wolf", "boar"),
+          1:("bear"),
+          0:(),
+        }
+        self.items_to_forage = {
+          3:("twig", "twig", "stone", "stick", "dry leaves", "leaves"),
+          2:("wood", "large rock"),
+          1:(),
+          0:(),
+        }
+        self.ground = ("dirt", "leaves", "dry leaves")
+        self.zombie_population = 7
+        self.weather = (2, 0.9, 1)
+        self.type = "outdoors"
+        self.direction = dict(
+          north=(),
+          south=(),
+          southeast=("Northern grasslands"),
+          west=(),
+        )
+        self.description = "You are standing in a quiet woods"
+        self.distant_description = "a temperate forest"
+      case "Eastern forest":
+        pass
+      case "Town":
+        pass
         
   def write_description(self):
     pass
@@ -147,14 +276,6 @@ class item:
 class landmark:
   def __init__(self, type):
     self.type = type
-
-
-def items_in(location):
-  return list(locations[player.location].items)
-def cls():
-  subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
-def chance(percent):
-  return (random.random *100 <= percent)
 
 def turn():
   cls()
@@ -195,7 +316,3 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Underground bunker":Location("Underground bunker"), #mechanic where looking around can reveal entrances possibly?
   "Ocean":Location("Ocean")
 }
-
-
-player.update_stats(1)
-player.write_conditions()

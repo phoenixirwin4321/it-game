@@ -97,16 +97,16 @@ class Weather:
         else:
           description.append("The sky is devoid of clouds, and the moon shines down, providing a surprising amount of light to see with")
 
-  if 0 <= self.wind <= 2:
-    description.append("The air is still; no wind")
-  elif 3 <= self.wind <= 5:
-    description.append("A light breeze is flowing across the island")
-  elif 6 <= self.wind <= 8:
-    description.append("A moderate gale is whooshing overr the island")
-  elif 9 <= self.wind <= 10:
-    description.append("A strong marine wind is blowing over the island, and leaves and other small things are swirling around in the tempest.")
+    if 0 <= self.wind <= 2:
+      description.append("The air is still; no wind")
+    elif 3 <= self.wind <= 5:
+      description.append("A light breeze is flowing across the island")
+    elif 6 <= self.wind <= 8:
+      description.append("A moderate gale is whooshing overr the island")
+    elif 9 <= self.wind <= 10:
+      description.append("A strong marine wind is blowing over the island, and leaves and other small things are swirling around in the tempest.")
   
-  description.append(f"The air temperature is {self.calculate_air_temperature() +20}")
+    description.append(f"The air temperature is {self.calculate_air_temperature() +20}")
 
 class Player:
   def __init__(self):

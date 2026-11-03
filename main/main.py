@@ -37,7 +37,7 @@ class Weather:
   def update(self):
     #change all of the data, based on the location, time of day and random chance.
     self.current_cloudiness = random.choice(list(self.cloudiness_modifiers.keys()))
-    self.air_temperature = dice(20)-10 +locations[player.location].weather[0]
+    self.air_temperature = dice(10)-5 +locations[player.location].weather[0]
     self.wind = dice(10) *locations[player.location].weather[1]
     self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
     
@@ -108,7 +108,7 @@ class Weather:
   
     description.append(f"The air temperature is {self.calculate_air_temp() +20}")
 
-    for line in description():
+    for line in description:
       print("•", line)
 
 class Player:

@@ -38,7 +38,7 @@ class Weather:
     #change all of the data, based on the location, time of day and random chance.
     self.current_cloudiness = random.choice(list(self.cloudiness_modifiers.keys()))
     self.air_temperature = dice(20)-10 +locations[player.location].weather[0]
-    self.wind = dice(10) *locations[player.location].weather[0]
+    self.wind = dice(10) *locations[player.location].weather[1]
     self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
     
   def calculate_air_temp(self):
@@ -97,7 +97,7 @@ class Weather:
         else:
           description.append("The sky is devoid of clouds, and the moon shines down, providing a surprising amount of light to see with")
 
-    if 0 <= self.wind <= 2:
+    if self.wind <= 2:
       description.append("The air is still; no wind")
     elif 3 <= self.wind <= 5:
       description.append("A light breeze is flowing across the island")

@@ -42,7 +42,7 @@ class Weather:
     self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
     
   def calculate_air_temp(self):
-    return self.air_temperature + locations[self.location].weather[0] + self.cloudiness_modifiers[self.current_cloudiness] + self.time_temperature_modifiers[self.time_rounded_temporary] - (self.wind/2) 
+    return self.air_temperature + locations[player.location].weather[0] + self.cloudiness_modifiers[self.current_cloudiness] + self.time_temperature_modifiers[self.time_rounded_temporary] - (self.wind/2) 
   def is_day(self):
     return 36 <= self.time <= 120
     
@@ -106,7 +106,7 @@ class Weather:
     elif 9 <= self.wind <= 10:
       description.append("A strong marine wind is blowing over the island, and leaves and other small things are swirling around in the tempest.")
   
-    description.append(f"The air temperature is {self.calculate_air_temperature() +20}")
+    description.append(f"The air temperature is {self.calculate_air_temp() +20}")
 
     for line in description():
       print("•", line)

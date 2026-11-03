@@ -108,8 +108,8 @@ class Weather:
   
     description.append(f"The air temperature is {self.calculate_air_temperature() +20}")
 
-  for line in description():
-    print("•", line)
+    for line in description():
+      print("•", line)
 
 class Player:
   def __init__(self):
@@ -320,4 +320,5 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Ocean":Location("Ocean")
 }
 
+time.wait(1)
 weather.update()

@@ -47,7 +47,8 @@ class Weather:
   def calculate_air_temp(self):
     t_x = self.air_temperature
     t_x += self.cloudiness_modifiers[self.current_cloudiness] #weather modifier
-    t_x += self.   
+    t_x -= self.wind//2
+    t_x += locations[player.location].weather[0]
   def is_day(self):
     return 36 <= self.time <= 120
     
@@ -100,6 +101,7 @@ class Player:
                       left_arm = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0},)   #health, skin integrity, bleeding, germs, pain (acts like minimum pain)
                       
     self.insulation = 2
+    
   def update_stats(self, time):
     for i in range(time):
       self.determine_active_status_effects()

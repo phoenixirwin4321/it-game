@@ -206,11 +206,11 @@ class Location:
         self.direction = dict(
           north=(),
           south=(),
-          southeast=("Northern grasslands"),
-          west=(),
+          southeast=(("Northern grasslands", 2)),
+          west=(("Town", 2)),
         )
         self.description = "You are standing in a quiet woods"
-        self.distant_description = "a temperate forest"
+        self.distant_description = "a temperate buzzing forest"
       case "Eastern forest":
         pass
       case "Town":
@@ -244,7 +244,7 @@ def turn():
   #resolve the action and print the result of the action like "you eat the cheese and suddenly keel over, clutching your stomach, you don't feel very well (+5 food poisoning)"
   #Check to see if an animal encounter occurs, note that some actions like searching for animals explicitly cause this.
 
-continue_temporary = input("Welcome to Zompocalypse, the educational catholic zombie apocalypse survival game! Type \"y\" to play, anything else will quit")
+continue_temporary = input("Welcome to Zompocalypse, the educational catholic zombie apocalypse survival game! Type \"y\" to play, anything else will quit: ")
 if (not continue_temporary.lower() == "y") or (__name__ != "__main__"):
   quit()
 #===========otherwise start the game!!!!!!!!!!!!
@@ -276,5 +276,3 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Ocean":Location("Ocean")
 }
 
-time.wait(1)
-weather.update()

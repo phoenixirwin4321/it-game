@@ -42,7 +42,7 @@ class Weather:
     self.current_cloudiness = random.choice(list(self.cloudiness_modifiers.keys()))
     self.air_temperature = dice(4)-2
     self.wind = dice(10) *locations[player.location].weather[1]
-    self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
+    self.precipitation = round(min(dice(100), dice(100)) *locations[player.location].weather[2])
     
   def calculate_air_temp(self):
     t_x = self.air_temperature
@@ -55,7 +55,7 @@ class Weather:
   def write_description(self):
     description = []
     description.append(f"Rain: {self.precipitation} >50 is raining")
-    description.append(f"Temperature: {self.calculate_air_temp()}")
+    description.append(f"Temperature: {self.calculate_air_temp()+20}")
     description.append(f"wind: {self.wind}")
     description.append(f"weather: {self.current_cloudiness}")
     description.append(f"time: {self.time//6}")

@@ -49,6 +49,8 @@ class Weather:
     t_x += self.cloudiness_modifiers[self.current_cloudiness] #weather modifier
     t_x -= self.wind//2
     t_x += locations[player.location].weather[0]
+    return t_x
+    
   def is_day(self):
     return 36 <= self.time <= 120
     

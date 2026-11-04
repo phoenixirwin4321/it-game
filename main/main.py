@@ -16,6 +16,9 @@ def between(x, minimum, maximum):
   
 def cap(x, minimum, maximum):
   return min(max(x, minimum), maximum)
+
+def debug_print(x):
+  print(f"debug message //  {x}")
 #------------------------------------------------
 
 class Weather:
@@ -37,79 +40,28 @@ class Weather:
   def update(self):
     #change all of the data, based on the location, time of day and random chance.
     self.current_cloudiness = random.choice(list(self.cloudiness_modifiers.keys()))
-    self.air_temperature = dice(10)-5 +locations[player.location].weather[0]
+    self.air_temperature = dice(4)-2
     self.wind = dice(10) *locations[player.location].weather[1]
     self.precipitation = min(dice(100), dice(100)) *locations[player.location].weather[2]
     
   def calculate_air_temp(self):
-    return self.air_temperature + locations[player.location].weather[0] + self.cloudiness_modifiers[self.current_cloudiness] + self.time_temperature_modifiers[self.time_rounded_temporary] - (self.wind/2) 
+    t_x = self.air_temperature
+    t_x += self.cloudiness_modifiers[self.current_cloudiness] #weather modifier
+    t_x += self.   
   def is_day(self):
     return 36 <= self.time <= 120
     
   def write_description(self):
     description = []
-    if self.time_rounded_temporary == 1:
-      description.append("It is early dawn, and the sun has not yet risen")
-    elif self.time_rounded_temporary == 2:
-      description.append("It is early dawn, the sun has risen over the island")
-    elif 2 < self.time_rounded_temporary <= 5:
-      description.append("It is morning, and the sun is high in the sky")
-    elif 5 < self.time_rounded_temporary <= 7:
-      description.append("It is noon, the sun is high in the sky")
-    elif self.time_rounded_temporary == 8:
-      description.append("It is the evening, the sun is beginning to set and the moon is slowly rising")
-    else:
-      description.append("It is night, the sun has set and the moon is high in the sky. Crickets and other bugs can be heard croaking rhythmically")
+    description.append(f"Rain: {self.precipitation} >50 is raining")
+    description.append(f"Temperature: {self.calculate_air_temp()}")
+    description.append(f"wind: {self.wind}")
+    description.append(f"weather: {self.current_cloudiness}")
+    description.append(f"time: {self.time//6}")
 
-    if 50 <= self.precipitation <= 65:
-      description.append("A light rain is falling over the island")
-    elif 66<=self.precipitation<=80:
-      description.append("A moderate downfall is pouring over the island")
-    elif 81 <= self.precipitation <= 90:
-      description.append("It is pouring down all around")
-    elif self.precipitation > 90:
-      description.append("It is pouring down a torrent like nothing ever before seen!")
-      
-    match self.current_cloudiness:
-      case "clear":
-        if self.is_day():
-          description.append("The weather is clear, with a few clouds present")
-        else:
-          description.append("The night sky is clear, a few clouds slowly drift across")
-      case "cloudy":
-        if self.is_day():
-          description.append("The sky is moderately cloudy, casting grey shadows on the ground")
-        else:
-          description.append("The night sky is cloudy and dark")
-      case "very cloudy":
-        if self.is_day():
-          description.append("Thick grey clouds cover the entire sky, casting a dark shadow over the whole surface of the island")
-        else:
-          description.append("Thick grey clouds cover the entire sky, blocking out the stars")
-      case "slightly cloudy":
-        if self.is_day():
-          description.append("The sky is mostly clear, with some light cloud cover")
-        else:
-          description.append("The sky is mostly clear, moonlight illuminates the landscape")
-      case "very sunny":
-        if self.is_day():
-          description.append("The sun blares down and there is not a cloud in sight")
-        else:
-          description.append("The sky is devoid of clouds, and the moon shines down, providing a surprising amount of light to see with")
-
-    if self.wind <= 2:
-      description.append("The air is still; no wind")
-    elif 3 <= self.wind <= 5:
-      description.append("A light breeze is flowing across the island")
-    elif 6 <= self.wind <= 8:
-      description.append("A moderate gale is whooshing overr the island")
-    elif 9 <= self.wind <= 10:
-      description.append("A strong marine wind is blowing over the island, and leaves and other small things are swirling around in the tempest.")
-  
-    description.append(f"The air temperature is {self.calculate_air_temp() +20}")
-
-    for line in description:
-      print("•", line)
+    for item in description:
+      print(f"• {item}")
+    print()
 
 class Player:
   def __init__(self):

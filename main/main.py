@@ -1,6 +1,8 @@
 import random, time, subprocess, os
 #remember 1440 minutes per day so 144 turns per day. Also here is the Unicode dot point symbol: •
 
+# ZERO AI WAS USED IN THE CREATION, IDEA OR CODING OR ANY OTHER STAGE OF THIS ENTIRE PROJECT AT ALL, NOT BUG FIXING OR ANYTHING. IT IS ALL ENTIRELY MY WORK.
+
 #------------------------------------------------
 def cls():
   subprocess.run('cls' if os.name == "nt" else "clear", shell=True)

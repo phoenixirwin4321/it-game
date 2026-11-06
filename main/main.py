@@ -169,7 +169,7 @@ class Location:
         self.zombie_population = 1 #!!!!!MEANS THAT THERE IS A 1% OF ENCOUNTERING A ZOMBIE EVERY 144 TURNS SO IN OTHER WORDS 0.01/144 CHANCE PER TURN!!!!!
         self.weather = (5, 1.5, 0.8)    #temperature add / wind multiplier / precipitation multiplier
         self.type = "outdoors"
-        self.direction = dict(north=("Northern grasslands", 2), surrounds=("Ocean", 0))  #The second element is the amount of turns it takes to travel in that direction
+        self.direction = dict(north=("Northern grasslands", 2))  #The second element is the amount of turns it takes to travel in that direction
         self.description = "You are standing in a sweeping grassy plain which extends all around you."
         self.distant_description = "a sweeping field"
 
@@ -205,11 +205,10 @@ class Location:
         self.type = "outdoors"
         self.direction = dict(
           north=(),
-          south=(),
-          southeast=(("Northern grasslands", 2)),
+          south=(("Northern grasslands", 2)),
           west=(("Town", 2)),
         )
-        self.description = "You are standing in a quiet woods"
+        self.description = "You are standing in a quiet woods, birds are chirping in the trees."
         self.distant_description = "a temperate buzzing forest"
       case "Eastern forest":
         pass

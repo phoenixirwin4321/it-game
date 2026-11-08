@@ -124,6 +124,7 @@ class Player:
     t_x = self.calculate_minimum_pain()
     if self.pain < t_x:
       self.pain = t_x
+    del t_x
     #-----------------------
 
 
@@ -287,4 +288,3 @@ print(locations[player.location].description)
 weather.write_description()
 print("\n---------------------------------")
 player.write_description()
-

@@ -40,11 +40,8 @@ class Weather:
     self.time_rounded_temporary = round(self.time/14.4)
     self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}
   def update(self):
-    #change all of the data, based on the location, time of day and random chance.
-    self.current_cloudiness = random.choice(list(self.cloudiness_modifiers.keys()))
-    self.air_temperature = dice(4)-2
-    self.wind = dice(10) *locations[player.location].weather[1]
-    self.precipitation = round(min(dice(100), dice(100)) *locations[player.location].weather[2])
+    #this represents 10 minutes. How the weather changes over the course of 10 minutes!!!
+    self.time_rounded_temporary = round(self.time/14.4) #...
     
   def calculate_air_temp(self):
     t_x = self.air_temperature
@@ -58,15 +55,16 @@ class Weather:
     
   def write_description(self):
     description = []
-    description.append(f"Rain: {self.precipitation} >50 is raining")
-    description.append(f"Temperature: {self.calculate_air_temp()+20}")
-    description.append(f"wind: {self.wind}")
-    description.append(f"weather: {self.current_cloudiness}")
-    description.append(f"time: {self.time//6}")
+    description.append(f"The time is {self.calculate_time_string()}")
 
+    description.append(f"The temperature is {self.calculate_air_temp() +20} degrees{" and it is raining" if self.precipitation >= 50 else ""}. The weather is {self.current_cloudiness} and wind is {self.wind}kmh {random.choice(["easterly", "westwardly", "north", "south"])}") #... make better
     for item in description:
-      print(f"• {item}")
-    print()
+      print(item, end=". ")
+
+  def calculate_time_string(self):
+    hour_t = self.time//6
+    minute_t = self.time % 6
+    return (f"{hour_t}:{minute_t}0")
 
 class Player:
   def __init__(self):
@@ -94,7 +92,7 @@ class Player:
     self.general_penalty = 0
     self.movement_penalty = 0
     
-    self.status_effects = [] #various symptoms and illnesses and effects like wet, cold, shivering, zombie infection, food poisoning. As tuples with different meanings of the other sections of the tuple for each effect.
+    self.status_effects = [] #various symptoms and illnesses and effects like wet, cold, shivering, zombie infection, food poisoning. As tuples with different meanings of the other sections of the tuple for each effect. Also contains nausea, cough, and the rest brooo
     self.limbs = dict(head = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0}, 
                       thorax = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0},
                       abdomen = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0},
@@ -104,7 +102,7 @@ class Player:
                       right_arm = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0},
                       left_arm = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0},)   #health, skin integrity, bleeding, germs, pain (acts like minimum pain)
                       
-    self.insulation = 2
+    self.insulation = self.calculate_insulation()
     
   def update_stats(self, time):
     for i in range(time):
@@ -128,16 +126,7 @@ class Player:
       self.pain = t_x
     #-----------------------
 
-  def calculate_insulation(self):
-    temporary = 0
-    for item in self.clothing:
-      temporary += item[3]
-    return temporary
-  def calculate_minimum_pain(self):
-    x = 0
-    for limb in self.limbs.keys():
-      x += self.limbs[limb]["pain"]
-    return x
+
 
   def determine_active_status_effects(self):
     pass
@@ -151,8 +140,19 @@ class Player:
     pass
   def remove_destroyed_clothing(self):
     pass
+
+  def calculate_insulation(self):
+    temporary = 0
+    for item in self.clothing:
+      temporary += item[3]
+    return temporary
+  def calculate_minimum_pain(self):
+    x = 0
+    for limb in self.limbs.keys():
+      x += self.limbs[limb]["pain"]
+    return x
   
-  def write_conditions(self):
+  def write_description(self):
     pass
     
 class Location:
@@ -172,7 +172,7 @@ class Location:
         self.weather = (5, 1.5, 0.8)    #temperature add / wind multiplier / precipitation multiplier
         self.type = "outdoors"
         self.direction = dict(north=("Northern grasslands", 2))  #The second element is the amount of turns it takes to travel in that direction
-        self.description = "You are standing in a sweeping grassy plain which extends all around you."
+        self.description = "You are standing in a sweeping grassy plain, tufts of dried grass rise out of the dry infertile soil, occasional shrubs dot the landscape."
         self.distant_description = "a sweeping field"
 
       case "Northern grasslands":
@@ -276,4 +276,15 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
   "Underground bunker":Location("Underground bunker"), #mechanic where looking around can reveal entrances possibly?
   "Ocean":Location("Ocean")
 }
+
+
+intro = "You wake up, you don't know how you got here, but you feel totally fine. You can't remember anything, not even your own name. The world is ending and the undead roam."
+
+print(intro, "\n *****")
+
+weather.update()
+print(locations[player.location].description)
+weather.write_description()
+print("\n---------------------------------")
+player.write_description()
 

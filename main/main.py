@@ -70,9 +70,9 @@ class Player:
   def __init__(self):
     self.location = "Southern grasslands" 
     self.inventory = []
-    self.clothing = [("T-shirt", 10, 0, 1, ("thorax", "abdomen")),
-                     ("shorts", 5, 0, 1, ("pelvis")),
-                     ("briefs", 4, 0, 0, ("pelvis"))]       #name, health, armour (reduces damage), insulation, body parts (that armour protects)
+    self.clothing = [Item("T-shirt"),
+                     Item("Shorts"),
+                     Item("Briefs")]
     #=======
     self.stamina = 100
     
@@ -106,11 +106,14 @@ class Player:
     
   def update_stats(self, time):
     for i in range(time):
-      self.determine_active_status_effects()
       self.set_static_stats()
+      self.set_status_effects()
       self.resolve_status_effects()
+      
       self.resolve_wound_effects() #like germs, bleeding, damage to limbs
+      
       self.change_dynamic_stats()
+      
       self.cap_values()
       self.remove_destroyed_clothing()
 
@@ -145,9 +148,10 @@ class Player:
   def calculate_insulation(self):
     temporary = 0
     for item in self.clothing:
-      temporary += item[3]
+      temporary += item.insulation
     return temporary
   def calculate_minimum_pain(self):
+    #adds all of the pain in each limb together.
     x = 0
     for limb in self.limbs.keys():
       x += self.limbs[limb]["pain"]
@@ -230,11 +234,11 @@ class Beast:
       case "basic zombie":
        pass
 
-class item:
+class Item:
   def __init__(self, type):
     self.type = type
     
-class landmark:
+class Landmark:
   def __init__(self, type):
     self.type = type
 

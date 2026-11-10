@@ -1,4 +1,4 @@
-import random, time, subprocess, os
+import random, time, subprocess, os #import rich and use before its too late
 #remember 1440 minutes per day so 144 turns per day. Also here is the Unicode dot point symbol: •
 
 # ZERO AI WAS USED IN THE CREATION, IDEA OR CODING OR ANY OTHER STAGE OF THIS ENTIRE PROJECT AT ALL, NOT BUG FIXING OR ANYTHING. IT IS ALL ENTIRELY MY WORK.
@@ -70,7 +70,7 @@ class Player:
   def __init__(self):
     self.location = "Southern grasslands" 
     self.inventory = []
-    self.clothing = [Item("T-shirt"),
+    self.items_worn = [Item("T-shirt"),
                      Item("Shorts"),
                      Item("Briefs")]
     #=======
@@ -93,6 +93,9 @@ class Player:
     self.movement_penalty = 0
     
     self.status_effects = [] #various symptoms and illnesses and effects like wet, cold, shivering, zombie infection, food poisoning. As tuples with different meanings of the other sections of the tuple for each effect. Also contains nausea, cough, and the rest brooo
+    # (("wet", 3)) wetness has a minimum, caused by wet clothing, wet items on the extremities cause less than torso. 
+    #(("cough", 4)) cough has a minimum, caused by the things causing it. Cough causes some penalties, reduces your mood, etc
+    # (("food poisoning", 5))  slowly goes down, causes nausea, abdominal pain, if it is serious it causes damage to your abdomen over time
     self.limbs = dict(head = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0}, 
                       thorax = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0},
                       abdomen = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0},
@@ -147,8 +150,8 @@ class Player:
 
   def calculate_insulation(self):
     temporary = 0
-    for item in self.clothing:
-      temporary += item.insulation
+    for item in self.items_worn:
+      temporary += item.wear_effects[1]
     return temporary
   def calculate_minimum_pain(self):
     #adds all of the pain in each limb together.
@@ -237,6 +240,34 @@ class Beast:
 class Item:
   def __init__(self, type):
     self.type = type
+    self.properties = []
+    match self.type:
+    
+      case "T-shirt":
+        self.properties = ("wearable") #properties are things like weapon, throwable, edible, wearable, etc.
+        self.integrity = 10 #this is how much damage through attacks or injuries to those body parts it can take
+        self.wear_effects = (0, 2, ("thorax", "abdomen"))  #armour, insulation, body parts
+        self.effects = () #things like wet, dirty.   (("wet",4))   #the wetness is the second one, it will slowly go down unless raining. Wet reduces temperature
+      case "Shorts":
+        self.properties = ("wearable")
+        self.integrity = 8
+        self.wear_effects = (0, 1, ("pelvis"))
+        self.effects = ()
+      case "Briefs":
+        self.properties = ("wearable")
+        self.integrity = 4
+        self.wear_effects = (0, 0, ("pelvis"))
+        self.effects = ()
+
+      case "Apple":
+        self.properties = ("edible")
+        self.eat_effects = (9, 1, ("die" if random.random() <0.00001 else None))   #hunger, thirst, status effects  (status effect name, duration)
+        self.integrity = 5 #(takes 5 days to go off)
+        
+
+
+
+
     
 class Landmark:
   def __init__(self, type):
@@ -250,7 +281,7 @@ def turn():
   #resolve the action and print the result of the action like "you eat the cheese and suddenly keel over, clutching your stomach, you don't feel very well (+5 food poisoning)"
   #Check to see if an animal encounter occurs, note that some actions like searching for animals explicitly cause this.
 
-continue_temporary = input("Welcome to Zompocalypse, the educational catholic zombie apocalypse survival game! Type \"y\" to play, anything else will quit: ")
+continue_temporary = input("Welcome to Zompocalypse, the educational zombie apocalypse survival game! Type \"y\" to play, anything else will quit the game (oh no) :( : ")
 if (not continue_temporary.lower() == "y") or (__name__ != "__main__"):
   quit()
 #===========otherwise start the game!!!!!!!!!!!!
@@ -292,3 +323,4 @@ print(locations[player.location].description)
 weather.write_description()
 print("\n---------------------------------")
 player.write_description()
+print(player.calculate_insulation())

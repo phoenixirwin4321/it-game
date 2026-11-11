@@ -261,7 +261,7 @@ class Item:
 
       case "Apple":
         self.properties = ("edible")
-        self.eat_effects = (9, 1, ("die" if random.random() <0.00001 else None))   #hunger, thirst, status effects  (status effect name, duration)
+        self.eat_effects = (9, 1, ())   #hunger, thirst, status effects  (status effect name, duration)
         self.integrity = 5 #(takes 5 days to go off)
         
 

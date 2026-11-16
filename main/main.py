@@ -66,6 +66,8 @@ class Weather:
     minute_t = self.time % 6
     return (f"{hour_t}:{minute_t}0")
 
+#===============================================
+
 class Player:
   def __init__(self):
     self.location = "Southern grasslands" 
@@ -162,7 +164,9 @@ class Player:
   
   def write_description(self):
     pass
-    
+
+#==============================
+
 class Location:
   """this is the thing that will track each location's items, landmarks, name, animal and plant species, zombie population temperature, description, map position etc"""
   def __init__(self, name):
@@ -196,19 +200,23 @@ class Location:
         self.distant_description = "a grassy meadow"
 
       case "Western woods":
-        self.flora = {3:("small tree", "small tree", "bush", "tree", "shrub"), 2:("grass tuft", "berry bush", "mushroom patch", "snakegrass"), 1:("apple tree"), 0:()}
+        self.flora = {3:("small tree", "small tree", "bush", "tree", "shrub"),
+                      2:("grass tuft", "berry bush", "mushroom patch", "snakegrass"),
+                      1:("apple tree"),
+                      0:()}
+        
         self.fauna = {
           3:("rabbit", "bird"),
           2:("deer", "wolf", "boar"),
           1:("bear"),
-          0:(),
-        }
+          0:(),}
+        
         self.items_to_forage = {
           3:("twig", "twig", "stone", "stick", "dry leaves", "leaves"),
           2:("wood", "large rock"),
           1:(),
-          0:(),
-        }
+          0:(),}
+        
         self.ground = ("dirt", "leaves", "dry leaves")
         self.zombie_population = 7
         self.weather = (2, 0.9, 1)
@@ -216,8 +224,7 @@ class Location:
         self.direction = dict(
           north=(),
           south=(("Northern grasslands", 2)),
-          west=(("Town", 2)),
-        )
+          west=(("Town", 2)),)
         self.description = "You are standing in a quiet woods, birds are chirping in the trees."
         self.distant_description = "a temperate buzzing forest"
       case "Eastern forest":
@@ -226,8 +233,12 @@ class Location:
         pass
         
   def write_description(self):
-    pass
+    description = []
+    description.append(self.description)
+    
+    return description
         
+#==========================
 
 class Beast:
   """this will track the type of animal, and the health, blood, stamina, anger, etc.only tracks animals that are near the player"""
@@ -236,6 +247,8 @@ class Beast:
     match self.type:
       case "basic zombie":
        pass
+
+#==========================
 
 class Item:
   def __init__(self, type):
@@ -266,7 +279,7 @@ class Item:
         
 
 
-
+#======================
 
     
 class Landmark:
@@ -314,13 +327,15 @@ locations = {  #directions from locations can be North/West/South/East OR In/Out
 }
 
 
+running = True
 intro = "You wake up, you don't know how you got here, but you feel totally fine. You can't remember anything, not even your own name. The world is ending and the undead roam."
 
 print(intro, "\n *****")
 
 weather.update()
-print(locations[player.location].description)
 weather.write_description()
 print("\n---------------------------------")
 player.write_description()
-print(player.calculate_insulation())
+print("\n---------------------------------")
+locations[player.location].write_description()
+print()

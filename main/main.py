@@ -163,7 +163,12 @@ class Player:
     return x
   
   def write_description(self):
-    pass
+    description = []
+    description.append("You are in good condition")
+    for item in clothing:
+      description.append(f"you are wearing {item.description}")
+    for item in description:
+      print(item)
 
 #==============================
 
@@ -235,7 +240,8 @@ class Location:
   def write_description(self):
     description = []
     description.append(self.description)
-    
+    for item in description:
+      print(description)
     return description
         
 #==========================
@@ -260,22 +266,26 @@ class Item:
         self.properties = ("wearable") #properties are things like weapon, throwable, edible, wearable, etc.
         self.integrity = 10 #this is how much damage through attacks or injuries to those body parts it can take
         self.wear_effects = (0, 2, ("thorax", "abdomen"))  #armour, insulation, body parts
-        self.effects = () #things like wet, dirty.   (("wet",4))   #the wetness is the second one, it will slowly go down unless raining. Wet reduces temperature
+        self.description = "A T-shirt"
+        self.effects = [] #things like wet, dirty.   (("wet",4))   #the wetness is the second one, it will slowly go down unless raining. Wet reduces temperature
       case "Shorts":
         self.properties = ("wearable")
         self.integrity = 8
         self.wear_effects = (0, 1, ("pelvis"))
-        self.effects = ()
+        self.effects = []
+        self.description = "A pair of shorts"
       case "Briefs":
         self.properties = ("wearable")
         self.integrity = 4
         self.wear_effects = (0, 0, ("pelvis"))
-        self.effects = ()
+        self.effects = []
+        self.description = "A pair of briefs"
 
       case "Apple":
         self.properties = ("edible")
         self.eat_effects = (9, 1, ())   #hunger, thirst, status effects  (status effect name, duration)
         self.integrity = 5 #(takes 5 days to go off)
+        self.description = "an apple"
         
 
 

@@ -286,6 +286,14 @@ class Landmark:
   def __init__(self, type):
     self.type = type
 
+def turnprint():
+  locations[player.location].write_description()
+  print("\n---------------------------------")
+  weather.write_description()
+  print("\n---------------------------------")
+  player.write_description()
+  print("\n---------------------------------")
+
 def turn():
   cls()
   #print player info and describe location and surroundings, landmarks and any animals, weather, environment, time of day, etc.
@@ -333,9 +341,4 @@ intro = "You wake up, you don't know how you got here, but you feel totally fine
 print(intro, "\n *****")
 
 weather.update()
-weather.write_description()
-print("\n---------------------------------")
-player.write_description()
-print("\n---------------------------------")
-locations[player.location].write_description()
-print()
+turnprint()

@@ -165,7 +165,7 @@ class Player:
   def write_description(self):
     description = []
     description.append("You are in good condition")
-    for item in clothing:
+    for item in self.items_worn:
       description.append(f"you are wearing {item.description}")
     for item in description:
       print(item)

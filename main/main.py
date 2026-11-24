@@ -56,6 +56,9 @@ class Weather:
     
   def is_day(self):
     return 36 <= self.time <= 120
+
+  def is_raining(self):
+    return bool(self.precipitation > 50)
     
   def write_description(self):
     description = []

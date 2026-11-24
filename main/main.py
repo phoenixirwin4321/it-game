@@ -163,7 +163,7 @@ class Player:
     #===============================================================================
     #energy boost status effect
     if "energy boost" in list(self.list_status_effects()):    #if energy boost in status effects
-      if self.GetEffect("energy boost", 1) >0 #make sure it is above zero (name, COUNT) accesses the count in energy boost which slowly goes down
+      if self.GetEffect("energy boost", 1) >0: #make sure it is above zero (name, COUNT) accesses the count in energy boost which slowly goes down
         self.stamina_max = 110
         self.energy += 10
         self.status_effects[self.list_status_effects.index("energy boost")][1]
@@ -212,14 +212,14 @@ class Player:
     match type:
       case "movement":
         return self.general_penalty + self.movement_penalty
-      case "dexterity:
+      case "dexterity":
         return self.general_penalty + self.dexterity_penalty
       case _:
         raise Exception("The calculation of the penalty input in the code is not a valid input. Line 167")
   
   def GetEffect(self, effect, number):
     """allows you to access different positions in the tuple which represents any status effect in self.status_effects"""
-    return self.status_effects[self.list_status_effects.index("energy boost")[number]
+    return self.status_effects[self.list_status_effects.index("energy boost")][number]
     
   def write_description(self):
     description = []
@@ -302,7 +302,7 @@ class Location:
     description = []
     description.append(self.description)
     for item in description:
-      print(description)
+      print(item)
     return description
         
 #==========================
@@ -373,7 +373,7 @@ def turnprint():
   weather.write_description()
   print("\n---------------------------------")
   player.write_description()
-  print("\n---------------------------------")
+  print("\n---------------------------------") #...
 
 def turn():
   cls()

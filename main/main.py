@@ -21,6 +21,9 @@ def cap(x, minimum, maximum):
 
 def debug_print(x):
   print(f"debug message //  {x}")
+
+def avg(a):
+  return sum(a) / len(a)
 #------------------------------------------------
 
 class Weather:
@@ -37,8 +40,9 @@ class Weather:
       "slightly cloudy":-2,
       "very sunny":9
     }
-    self.time_rounded_temporary = round(self.time/14.4)
-    self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}
+    self.time_rounded_temporary = round(self.time/14.4) #this thing converts the time number into a number from 1-10 to make it easier to describe things
+    self.time_temperature_modifiers = {1:-5,2:-2,3:1,4:3,5:5,6:4,7:2,8:0,9:-2,10:-3,}   #this is to calculate the change to the temperature for the time of day
+    
   def update(self):
     #this represents 10 minutes. How the weather changes over the course of 10 minutes!!!
     self.time_rounded_temporary = round(self.time/14.4) #...
@@ -62,6 +66,7 @@ class Weather:
       print(item, end=". ")
 
   def calculate_time_string(self):
+    """utility function that converts the time number into a 6:30 aah thing"""
     hour_t = self.time//6
     minute_t = self.time % 6
     return (f"{hour_t}:{minute_t}0")
@@ -71,23 +76,23 @@ class Weather:
 class Player:
   def __init__(self):
     self.location = "Southern grasslands" 
-    self.inventory = []
+    self.inventory = [] #list of objects
     self.items_worn = [Item("T-shirt"),
                      Item("Shorts"),
                      Item("Briefs")]
     #=======
     self.stamina = 100
+    self.stamina_max = 100
+    self.energy = 100
     
     self.hunger = 100
     self.wakefulness = 100
     self.thirst = 100
+    
     self.temperature = 50
     self.target_temperature = 50
-    
-    self.mood = 50 #affects general penalty and also immunity. Can cause status effects like ecstatic, depressed, etc. Also is dynamic but normaliser scales.
 
     self.dirt = 0 #some actions increase, washing decreases
-    self.immunity = 100
 
     self.pain = 0
     self.dexterity_penalty = 0
@@ -95,7 +100,7 @@ class Player:
     self.movement_penalty = 0
     
     self.status_effects = [] #various symptoms and illnesses and effects like wet, cold, shivering, zombie infection, food poisoning. As tuples with different meanings of the other sections of the tuple for each effect. Also contains nausea, cough, and the rest brooo
-    # (("wet", 3)) wetness has a minimum, caused by wet clothing, wet items on the extremities cause less than torso. 
+    # (("wet", 3)) wetness has a minimum, caused by wet clothing, wet items on the extremities cause less than torso???
     #(("cough", 4)) cough has a minimum, caused by the things causing it. Cough causes some penalties, reduces your mood, etc
     # (("food poisoning", 5))  slowly goes down, causes nausea, abdominal pain, if it is serious it causes damage to your abdomen over time
     self.limbs = dict(head = {"health":100, "skin":100, "bleeding":0, "germs":0, "pain":0}, 
@@ -111,9 +116,10 @@ class Player:
     
   def update_stats(self, time):
     for i in range(time):
+      self.set_status_effects() #this works out the status effects
+      
       self.set_static_stats()
-      self.set_status_effects()
-      self.resolve_status_effects()
+      self.resolve_status_effects() #this can change static_stats which is why it is here
       
       self.resolve_wound_effects() #like germs, bleeding, damage to limbs
       
@@ -123,33 +129,59 @@ class Player:
       self.remove_destroyed_clothing()
 
   def set_static_stats(self):
+    """temperature, pain, dex penalty, mov penalty, general penalty, """
     #temperature
     self.insulation = self.calculate_insulation()
     self.target_temperature = 50 + (self.insulation + weather.calculate_air_temp())
     #----------------------
-    #then we have pain
+    #then energy
+    self.energy = 100
+    t_x = avg([self.hunger, self.thirst, self.wakefulness])
+    self.energy = round(avg([t_x,100]))
+    
+    #----------------------
+    #then we have pain (also represents discomfort)
     self.pain -= 1
     t_x = self.calculate_minimum_pain()
     if self.pain < t_x:
       self.pain = t_x
     del t_x
     #-----------------------
+    self.stamina_max = avg(100, 100-self.calculate_penalty("movement"))
 
 
 
-  def determine_active_status_effects(self):
+  def set_status_effects(self):
+    """add new status effects, remove status effects that have expired"""
     pass
   def resolve_status_effects(self):
+    """this one resolves the effects of status effects and their countdown etc"""
     pass
+    
   def cap_values(self):
-    pass
+    self.hunger = cap(self.hunger, 0, 150) #hunger above 100 gives you nausea and speeds up the loss of hunger because u r full
+    self.thirst = cap(self.thirst, 0, 100)
+    self.dirt = cap(self.dirt, 0, 100)
+    self.wakefulness = cap(self.wakefulness, 0, 110)
+    self.stamina = cap(self.stamina, 0, self.stamina_max)
+    self.energy = cap(self.energy, 0, 100)
+    
+    
   def change_dynamic_stats(self):
-    pass
+    #----------------             degrade hunger, thirst, wakefulness
+    self.hunger  -= 0.1
+    self.thirst -= 0.1
+    self.wakefulness -= 0.05
+    #---------------              stamina
+    self.stamina += self.calculate_stamina_recovery()  #energy is determined by hunger, thirst and wakefulness. Ranges from 0-100 which translates to +1 to +8
+
+    
   def resolve_wound_effects(self):
     pass
   def remove_destroyed_clothing(self):
     pass
 
+  
   def calculate_insulation(self):
     temporary = 0
     for item in self.items_worn:
@@ -161,7 +193,21 @@ class Player:
     for limb in self.limbs.keys():
       x += self.limbs[limb]["pain"]
     return x
-  
+  def list_status_effects(self):
+    t_x = []
+    for each in self.status_effects:
+      t_x.append(each[0])  #because the first point in the list is the name of the status effect, all other data is unique to each status effect possibly
+    return t_x
+
+  def calculate_penalty(self, type):
+    match type:
+      case "movement":
+        return self.general_penalty + self.movement_penalty
+      case "dexterity:
+        return self.general_penalty + self.dexterity_penalty
+      case _:
+        raise Exception("The calculation of the penalty input in the code is not a valid input. Line 167")
+    
   def write_description(self):
     description = []
     description.append("You are in good condition")
@@ -228,8 +274,10 @@ class Location:
         self.type = "outdoors"
         self.direction = dict(
           north=(),
-          south=(("Northern grasslands", 2)),
-          west=(("Town", 2)),)
+          south=(("Northern grasslands", 2)), #...
+          west=(("Town", 2)),
+        
+        )
         self.description = "You are standing in a quiet woods, birds are chirping in the trees."
         self.distant_description = "a temperate buzzing forest"
       case "Eastern forest":

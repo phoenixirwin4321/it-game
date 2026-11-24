@@ -77,9 +77,10 @@ class Player:
   def __init__(self):
     self.location = "Southern grasslands" 
     self.inventory = [] #list of objects
-    self.items_worn = [Item("T-shirt"),
-                     Item("Shorts"),
-                     Item("Briefs")]
+    self.items_worn = [Item("T-shirt"),   #notation. First letter is capped all else not
+                       Item("Jacket"),
+                       Item("Shorts"),
+                       Item("Briefs")]
     #=======
     self.stamina = 100
     self.stamina_max = 100
@@ -156,7 +157,13 @@ class Player:
     pass
   def resolve_status_effects(self):
     """this one resolves the effects of status effects and their countdown etc"""
-    pass
+    #===============================================================================
+    #energy boost status effect
+    if "energy boost" in list(self.list_status_effects()):    #if energy boost in status effects
+      if self.GetEffect("energy boost", 1) >0 #make sure it is above zero (name, COUNT) accesses the count in energy boost which slowly goes down
+        self.stamina_max = 110
+        self.energy += 10
+        self.status_effects[self.list_status_effects.index("energy boost")][1]
     
   def cap_values(self):
     self.hunger = cap(self.hunger, 0, 150) #hunger above 100 gives you nausea and speeds up the loss of hunger because u r full
@@ -198,7 +205,6 @@ class Player:
     for each in self.status_effects:
       t_x.append(each[0])  #because the first point in the list is the name of the status effect, all other data is unique to each status effect possibly
     return t_x
-
   def calculate_penalty(self, type):
     match type:
       case "movement":
@@ -207,6 +213,10 @@ class Player:
         return self.general_penalty + self.dexterity_penalty
       case _:
         raise Exception("The calculation of the penalty input in the code is not a valid input. Line 167")
+  
+  def GetEffect(self, effect, number):
+    """allows you to access different positions in the tuple which represents any status effect in self.status_effects"""
+    return self.status_effects[self.list_status_effects.index("energy boost")[number]
     
   def write_description(self):
     description = []
@@ -328,13 +338,23 @@ class Item:
         self.wear_effects = (0, 0, ("pelvis"))
         self.effects = []
         self.description = "A pair of briefs"
-
+      case "Jacket":
+        self.properties = ("wearable")
+        self.integrity = 12
+        self.wear_effects = (5, 10, ("thorax", "abdomen", "left_arm", "right_arm"))    #one armour means 99% damage. Max armour is 100 which blocks all damage, however armour is not invincible.
+        self.effects = []
+        self.description = "A warm jacket"
+        
       case "Apple":
         self.properties = ("edible")
-        self.eat_effects = (9, 1, ())   #hunger, thirst, status effects  (status effect name, duration)
-        self.integrity = 5 #(takes 5 days to go off)
+        self.eat_effects = (9, 1, ())   #hunger, thirst, status effects  ((status effect name, duration), chance (out of 1)) (("food poisoning", 5), 0.2)
+        self.integrity = 5 #(takes 5 days to go off, it will turn into a rotten apple)
         self.description = "an apple"
-        
+      case "Rotten apple":
+        self.properties = ("edible")
+        self.eat_effects = (4, 0, ((("food poisoning", 10),0.2)))
+        self.integrity = 20 #maybe after 20 days turns into rotten stuff idk
+        self.description = "a dry shrivelled up apple"
 
 
 #======================

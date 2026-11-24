@@ -1,0 +1,148 @@
+import random, time, subprocess, os
+import pygame
+
+pygame.init()
+W,H =800,800
+display = pygame.display.set_mode((W,H))
+
+
+LAND= 90
+SIZE=99
+RANDOM_LAND_CHANCE = 5500 #higher = rarer
+CONTINENT_CHANCE = 8 #higher = rarer
+
+map = None
+
+def create_map_def(amount):
+    global map
+    map = []
+
+    for i in range(amount):
+        row = []
+        for j in range(amount):
+            row.append("0")
+        map.append(row)
+    row = []
+
+def create_map():
+    #------------------------
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            am = count_adjacent_X(j, i)
+            if not get(j,i)=="X":
+                if random.randint(1,CONTINENT_CHANCE)< am <9 or random.randint(1,RANDOM_LAND_CHANCE)==3:  #random.randint(1,CONTINENT_CHANCE)<am
+                    set_point(j,i,"X")
+                else:
+                    set_point(j,i,"_")
+               
+            else:
+                set_point(j,i,"X")
+
+def clear_outliers():
+    global map
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            if count_adjacent_X(j,i) == 0:
+                set_point(j,i,"_")
+
+    #------------------------
+
+def set_point(x, y, value):
+    global map
+    map[y][x] = value
+
+def count_adjacent_X(x, y):
+    rt = 0
+    k=1
+
+    try:
+        if get(x+1, y) == "X":
+            rt+=1
+    except IndexError:
+        pass
+    try:
+        if get(x-1, y) == "X":
+            rt+=1
+    except IndexError:
+        pass
+    try:
+        if get(x, y+1) == "X":
+            rt+=1
+    except IndexError:
+        pass
+    try:
+        if get(x, y-1) == "X":
+            rt+=1
+    except IndexError:
+        pass
+
+    try:
+        if get(x+1, y+1) == "X":
+            rt+=k
+    except IndexError:
+        pass
+    try:
+        if get(x-1, y+1) == "X":
+            rt+=k
+    except IndexError:
+        pass
+    try:
+        if get(x+1, y-1) == "X":
+            rt+=k
+    except IndexError:
+        pass
+    try:
+        if get(x-1, y-1) == "X":
+            rt+=k
+    except IndexError:
+        pass
+    return rt
+
+
+def get(x, y):
+    return map[y][x]
+
+def print_map():
+    global map
+    for row in map:
+        for cell in row:
+            print(cell, end=" ")
+        print()
+
+def render_map():
+    cx, cy = W/len(map), H/len(map)
+    for y in range(len(map)):
+        for x in range(len(map[y])):
+            if get(x,y) == "X":
+                if 1< count_adjacent_X(x,y) < 8:
+                    pygame.draw.rect(display, (210,210,0), (x*cx,y*cy,W/len(map),H/len(map)))
+                else:
+                    pygame.draw.rect(display, (0,200,0), (x*cx,y*cy,W/len(map),H/len(map)))
+            else:
+                pygame.draw.rect(display, (5,5,100), (x*cx,y*cy,W/len(map),H/len(map)))
+                
+
+#create_map_def(SIZE)
+def terrain():
+    create_map_def(SIZE)
+    for i in range(LAND):
+    
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        display.fill((255,255,255))
+        create_map()
+        render_map()
+        print_map()
+        pygame.display.flip()
+        subprocess.run('cls' if os.name == "nt" else "clear", shell=True)
+    clear_outliers()
+    display.fill((255,255,255))
+    render_map()
+    pygame.display.flip()
+terrain()
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+    #terrain()

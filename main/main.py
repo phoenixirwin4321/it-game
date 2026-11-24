@@ -167,16 +167,7 @@ class Player:
         self.stamina_max = 110
         self.energy += 10
         self.status_effects[self.list_status_effects.index("energy boost")][1]
-    
-  def cap_values(self):
-    self.hunger = cap(self.hunger, 0, 150) #hunger above 100 gives you nausea and speeds up the loss of hunger because u r full
-    self.thirst = cap(self.thirst, 0, 100)
-    self.dirt = cap(self.dirt, 0, 100)
-    self.wakefulness = cap(self.wakefulness, 0, 110)
-    self.stamina = cap(self.stamina, 0, self.stamina_max)
-    self.energy = cap(self.energy, 0, 100)
-    
-    
+       
   def change_dynamic_stats(self):
     #----------------             degrade hunger, thirst, wakefulness
     self.hunger  -= 0.1
@@ -191,23 +182,33 @@ class Player:
   def remove_destroyed_clothing(self):
     pass
 
+  def cap_values(self):
+    self.hunger = cap(self.hunger, 0, 150) #hunger above 100 gives you nausea and speeds up the loss of hunger because u r full
+    self.thirst = cap(self.thirst, 0, 100)
+    self.dirt = cap(self.dirt, 0, 100)
+    self.wakefulness = cap(self.wakefulness, 0, 110)
+    self.stamina = cap(self.stamina, 0, self.stamina_max)
+    self.energy = cap(self.energy, 0, 100)
   
   def calculate_insulation(self):
     temporary = 0
     for item in self.items_worn:
       temporary += item.wear_effects[1]
     return temporary
+    
   def calculate_minimum_pain(self):
     #adds all of the pain in each limb together.
     x = 0
     for limb in self.limbs.keys():
       x += self.limbs[limb]["pain"]
     return x
+    
   def list_status_effects(self):
     t_x = []
     for each in self.status_effects:
       t_x.append(each[0])  #because the first point in the list is the name of the status effect, all other data is unique to each status effect possibly
     return t_x
+    
   def calculate_penalty(self, type):
     match type:
       case "movement":
@@ -216,10 +217,14 @@ class Player:
         return self.general_penalty + self.dexterity_penalty
       case _:
         raise Exception("The calculation of the penalty input in the code is not a valid input. Line 167")
+        
+  def calculate_stamina_recovery(self):
+    """calculates by how much stamina should rise every turn"""
+    pass #...
   
   def GetEffect(self, effect, number):
     """allows you to access different positions in the tuple which represents any status effect in self.status_effects"""
-    return self.status_effects[self.list_status_effects.index("energy boost")][number]
+    return self.status_effects[self.list_status_effects.index(effect)][number]
     
   def write_description(self):
     description = []

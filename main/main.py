@@ -219,7 +219,8 @@ class Player:
         raise Exception("The calculation of the penalty input in the code is not a valid input. Line 167")
         
   def calculate_stamina_recovery(self):
-    """calculates by how much stamina should rise every turn"""
+    """calculates by how much stamina should rise every turn
+    Energy 0-100 translates to +1-+8"""
     pass #...
   
   def GetEffect(self, effect, number):
